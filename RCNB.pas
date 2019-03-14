@@ -13,6 +13,7 @@ Type
 
 function RCNB_Encode(s:array of byte):widestring;overload;
 function RCNB_Encode(s:ansistring):widestring;overload;
+function RCNB_Decode(s:widestring):ansistring;
 
 implementation
 Const
@@ -94,5 +95,69 @@ Begin
 	for i:=1 to length(s) do a[i-1]:=byte(s[i]);
 	result := RCNB_Encode(a);
 End;
+
+function decodeByte(c:widestring):longint;
+Var
+	nb : boolean;
+	idx : array[1..2] of longint;
+Begin
+	nb:=false;
+	idx[1]:=pos(c[1],cr)-1;
+	idx[2]:=pos(c[2],cc)-1;
+	if (idx[1]<0) or (idx[2]<0) then begin
+		idx[1]:=pos(c[1],cn)-1;
+		idx[2]:=pos(c[2],cb)-1;	
+		nb:=true;
+	end;
+	if (idx[1]<0) or (idx[2]<0) then
+		raise NotEnoughNBException.Create('This string is not enough nb!');
+	if nb
+		then exit( (idx[1]*sb + idx[2]) or $80)
+		else exit(  idx[1]*sc + idx[2]);
+End;
+
+function decodeShort(c:widestring):longint;
+Var
+	reverse : boolean;
+	idx : array[1..4] of longint;
+Begin
+	reverse := pos(c[1],cr) = 0;
+	if not reverse then begin
+		idx[1] := pos(c[1],cr)-1;
+		idx[2] := pos(c[2],cc)-1;
+		idx[3] := pos(c[3],cn)-1;
+		idx[4] := pos(c[4],cb)-1;
+	end
+	else
+	begin
+		idx[1] := pos(c[3],cr)-1;
+		idx[2] := pos(c[4],cc)-1;
+		idx[3] := pos(c[1],cn)-1;
+		idx[4] := pos(c[2],cb)-1;
+	end;
+	if (idx[1]<0) or (idx[2]<0) or (idx[3]<0) or (idx[4]<0) then
+		raise NotEnoughNBException.Create('This string is not enough nb!');
+	result:= idx[1]*scnb + idx[2]*snb + idx[3]*sb + idx[4];
+	if result>$7FFF then 
+		raise RCNBOverflowException.Create('RCNB(RC/NB) Overflow');
+	if reverse then result := result or $8000;
+End;
+
+function RCNB_Decode(s:widestring):ansistring;
+Var
+	i,value:longint;
+Begin
+	result:='';
+	if length(s) and 1 = 1 then
+		raise LengthNotNBException.Create('Not a Nb length for a string!');
+	for i:=0 to (length(s) >> 2)-1 do begin
+		value := decodeShort(copy(s,i*4+1,4));
+		result:=result+ansichar(value >> 8)+ansichar(value and $FF);
+	end;
+	
+	if length(s) and 2 > 0 then
+		result:=result+ansichar(decodeByte(copy(s,length(s)-1,2)));
+End;
+
 
 end.
