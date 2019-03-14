@@ -1,4 +1,4 @@
-# RCNB.java 
+# RCNB.pas
 
 The world is based on RC. Thus, everything can be encoded into RCNB.
 
