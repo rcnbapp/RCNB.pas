@@ -2,17 +2,12 @@
 
 The world is based on RC. Thus, everything can be encoded into RCNB.
 
-See also: [librcnb](https://github.com/rcnbapp/librcnb) [RCNB.php](https://github.com/rcnbapp/RCNB.php) [RCNB.js](https://github.com/rcnbapp/RCNB.js) [RCNB.java](https://github.com/IsSkyfalls/RCNB.java)
+RCNB is available in various languages: [JavaScript](https://github.com/rcnbapp/RCNB.js) [C](https://github.com/rcnbapp/librcnb) [PHP](https://github.com/rcnbapp/RCNB.php) **Pascal** [Java](https://github.com/IsSkyfalls/RCNB.java) ([more..](https://github.com/rcnbapp/))
 
-## Why RCNB?
+## What's RCNB?
 
-### RCNB vs Base64
+Please refer to [RCNB.js](https://github.com/rcnbapp/RCNB.js)
 
-|           | Base64       | RCNB                                                          |
-|-----------|--------------|---------------------------------------------------------------|
-| Speed     | ❌ Fast       | ✔️ Slow, motivate Intel to improve their CPU                   |
-| Printable | ❌ On all OS  | ✔️ Jvm supports almost all os! |
-| Niubility | ❌ Not at all | ✔️ RCNB!                                                     |
-| Example   | QmFzZTY0Lg== | ȐĉņþƦȻƝƃŔć                                                    |
+## Usage
 
-### RC is really NB
+Todo.
