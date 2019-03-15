@@ -10,4 +10,29 @@ Please refer to [RCNB.js](https://github.com/rcnbapp/RCNB.js)
 
 ## Usage
 
-Todo.
+### uses
+1. Copy `RCNB.pas` to your project.
+
+2. Add `RCNB` to your uses list.
+
+### Encode
+1. Definition
+	```
+	function RCNB_Encode(s:TBytes):widestring;
+	```
+
+2. Usage
+	```
+	aWideString:=RCNB_Encode(aTBytes);
+	```
+
+### Decode
+1. Definition
+	```
+	function RCNB_Decode(s:widestring):TBytes;
+	```
+
+2. Usage
+	```
+	aTBytes:=RCNB_Decode(s);
+	```
