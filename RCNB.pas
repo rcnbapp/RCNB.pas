@@ -11,9 +11,8 @@ Type
 	NotEnoughNBException = Class(Exception);
 	RCNBOverflowException = Class(Exception);
 
-function RCNB_Encode(s:array of byte):widestring;overload;
-function RCNB_Encode(s:ansistring):widestring;overload;
-function RCNB_Decode(s:widestring):ansistring;
+function RCNB_Encode(s:TBytes):widestring;
+function RCNB_Decode(s:widestring):Tbytes;
 
 implementation
 Const
@@ -76,7 +75,7 @@ Begin
 		result := chars;
 End;
 
-function RCNB_Encode(s:array of byte):widestring;overload;
+function RCNB_Encode(s:TBytes):widestring;
 Var
 	i : longint;
 Begin
@@ -84,16 +83,6 @@ Begin
 	for i := 0 to (length(s) div 2)-1 do result := result + encodeShort( s[i*2]<<8 or s[i*2+1] );
 	if length(s) mod 2 <> 0 then
 		result := result + encodeByte( s[length(s)-1] );
-End;
-
-function RCNB_Encode(s:ansistring):widestring;overload;
-Var
-	i:longint;
-	a:array of byte;
-Begin
-	setlength(a,length(s));
-	for i:=1 to length(s) do a[i-1]:=byte(s[i]);
-	result := RCNB_Encode(a);
 End;
 
 function decodeByte(c:widestring):longint;
@@ -143,20 +132,23 @@ Begin
 	if reverse then result := result or $8000;
 End;
 
-function RCNB_Decode(s:widestring):ansistring;
+function RCNB_Decode(s:widestring):Tbytes;
 Var
 	i,value:longint;
 Begin
-	result:='';
+	if length(s) and 2 > 0 
+		then setlength(result,(length(s) >> 1) + 1)
+		else setlength(result,length(s) >> 1);
 	if length(s) and 1 = 1 then
 		raise LengthNotNBException.Create('Not a Nb length for a string!');
 	for i:=0 to (length(s) >> 2)-1 do begin
 		value := decodeShort(copy(s,i*4+1,4));
-		result:=result+ansichar(value >> 8)+ansichar(value and $FF);
+		result[i*2]:=value >> 8;
+		result[i*2+1]:=value and $ff;
 	end;
-	
 	if length(s) and 2 > 0 then
-		result:=result+ansichar(decodeByte(copy(s,length(s)-1,2)));
+		result[length(result)-1]:=decodeByte(copy(s,length(s)-1,2));
+
 End;
 
 

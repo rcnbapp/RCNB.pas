@@ -1,4 +1,4 @@
-Uses RCNB;
+Uses RCNB,sysutils;
 
 Var
 	o:longint;
@@ -10,6 +10,18 @@ Var
 	
 	encodeStr:widestring;
 	decodeStr:ansistring;
+
+	
+function toString(a:tbytes):ansistring;
+Var
+	s:ansistring;
+	i:longint;
+Begin
+	s:='';
+	for i:=0 to length(a)-1 do s:=s+chr(a[i]);
+	exit(s);
+End;
+	
 Begin;
 	writeln('Encode (1)');
 	writeln('Decode (2)');
@@ -28,12 +40,12 @@ Begin;
 	end;
 	
 	if o=1 then begin
-		encodeStr:=RCNB_Encode(str);
+		encodeStr:=RCNB_Encode(BytesOf(str));
 		write(textOut,UTF8Encode(encodeStr));
 	end
 	else
 	begin
-		decodeStr:=RCNB_Decode(UTF8Decode(str));
+		decodeStr:=toString(RCNB_Decode(UTF8Decode(str)));
 		write(textOut,decodeStr);
 	end;
 	
