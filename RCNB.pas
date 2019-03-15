@@ -12,7 +12,7 @@ Type
 	RCNBOverflowException = Class(Exception);
 
 function RCNB_Encode(s:TBytes):widestring;
-function RCNB_Decode(s:widestring):Tbytes;
+function RCNB_Decode(s:widestring):TBytes;
 
 implementation
 Const
@@ -132,7 +132,7 @@ Begin
 	if reverse then result := result or $8000;
 End;
 
-function RCNB_Decode(s:widestring):Tbytes;
+function RCNB_Decode(s:widestring):TBytes;
 Var
 	i,value:longint;
 Begin
