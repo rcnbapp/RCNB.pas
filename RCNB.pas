@@ -136,11 +136,9 @@ function RCNB_Decode(s:widestring):TBytes;
 Var
 	i,value:longint;
 Begin
-	if length(s) and 2 > 0 
-		then setlength(result,(length(s) >> 1) + 1)
-		else setlength(result,length(s) >> 1);
 	if length(s) and 1 = 1 then
 		raise LengthNotNBException.Create('Not a Nb length for a string!');
+	setlength(result,length(s) >> 1);
 	for i:=0 to (length(s) >> 2)-1 do begin
 		value := decodeShort(copy(s,i*4+1,4));
 		result[i*2]:=value >> 8;
